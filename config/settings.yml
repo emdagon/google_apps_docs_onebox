@@ -1,0 +1,4 @@
+plugins: 
+  gapps_docs_domain: 
+    client: true
+    default: yourdomain.com
