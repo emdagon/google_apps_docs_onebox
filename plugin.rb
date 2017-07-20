@@ -19,7 +19,7 @@ module Onebox
         }
       end
 
-      matches_regexp /^(https?:)?\/\/(docs\.google\.com)\/a\/#{Regexp.quote(SiteSetting.google_apps_domain)}\/(?<endpoint>(#{supported_endpoints.join('|')}))\/d\/e\/((?<key>[\w-]*)).+$/
+      matches_regexp /^(https?:)?\/\/(docs\.google\.com)\/a\/#{Regexp.quote(Discourse.SiteSetting.google_apps_domain)}\/(?<endpoint>(#{supported_endpoints.join('|')}))\/d\/e\/((?<key>[\w-]*)).+$/
       always_https
 
       protected
