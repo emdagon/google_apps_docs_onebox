@@ -1,58 +1,62 @@
-# name: gdocs_onebox
-# about: Google docs Onebox for embding spreadsheets, forms, documents and presentations.
-# version: 0.1
-# authors: Naveed Ahmad
-
-Onebox = Onebox
-
 module Onebox
   module Engine
-    class GoogleDocsOnebox
-
+    class GoogleAppsDocsOnebox
       include Engine
+      include LayoutSupport
 
       def self.supported_endpoints
         %w(spreadsheets document forms presentation)
       end
 
-      matches_regexp /^(https?:)?\/\/(docs\.google\.com)\/(?<endpoint>(#{supported_endpoints.join('|')}))\/d\/((?<key>[\w-]*)).+$/
-
-      def to_html
-        if document?
-          "<iframe class='gdocs-onebox document?-onebox' src='https://docs.google.com/document/d/#{key}/pub?embedded=true' style='border: 0' width='800' height='600' frameborder='0' scrolling='yes' ></iframe>"
-        elsif spreadsheet?
-          "<iframe class='gdocs-onebox spreadsheet-onebox' src='https://docs.google.com/spreadsheet/ccc?key=#{key}&usp=sharing&rm=minimal' style='border: 0' width='800' height='600' frameborder='0' scrolling='yes' ></iframe>"
-        elsif presentation?
-          "<iframe class='gdocs-onebox presentation-onebox' src='https://docs.google.com/presentation/d/#{key}/embed?start=false&loop=false&delayms=3000' frameborder='0' width='960' height='749' allowfullscreen='true' mozallowfullscreen='true' webkitallowfullscreen='true'></iframe>"
-        elsif forms?
-          "<iframe class='gdocs-onebox forms-onebox' src='https://docs.google.com/forms/d/#{key}/viewform?embedded=true' width='760' height='500' frameborder='0' marginheight='0' marginwidth='0' scrolling='yes'>Loading...</iframe>"
-        end
+      def self.short_types
+        @shorttypes ||= {
+          spreadsheets: :sheets,
+          document: :docs,
+          presentation: :slides,
+          forms: :forms,
+        }
       end
 
-      def spreadsheet?
-        match[:endpoint] == 'spreadsheets'
+      matches_regexp /^(https?:)?\/\/(docs\.google\.com)\/a\/#{SiteSetting.gapps_docs_domain}\/(?<endpoint>(#{supported_endpoints.join('|')}))\/d\/e\/((?<key>[\w-]*)).+$/
+      always_https
+
+      protected
+
+      def data
+        og_data = get_og_data
+        result = { link: link,
+                   title: og_data[:title] || "Google #{shorttype.to_s.capitalize}",
+                   description: og_data[:description] || "This #{shorttype.to_s.chop.capitalize} is private",
+                   type: shorttype
+                 }
+        result
       end
 
-      def document?
-        match[:endpoint] == 'document'
+      def doc_type
+        @doc_type ||= match[:endpoint].to_sym
       end
 
-      def presentation?
-        match[:endpoint] == 'presentation'
-      end
-
-      def forms?
-        match[:endpoint] == 'forms'
-      end
-
-      def key
-        match[:key]
+      def shorttype
+        GoogleDocsOnebox.short_types[doc_type]
       end
 
       def match
         @match ||= @url.match(@@matcher)
       end
+
+      def get_og_data
+        response = Onebox::Helpers.fetch_response(url, 10) rescue nil
+        html = Nokogiri::HTML(response)
+        og_data = {}
+        html.css('meta').each do |m|
+          if m.attribute('property') && m.attribute('property').to_s.match(/^og:/i)
+            m_content = m.attribute('content').to_s.strip
+            m_property = m.attribute('property').to_s.gsub('og:', '')
+            og_data[m_property.to_sym] = m_content
+          end
+        end
+        og_data
+      end
     end
   end
 end
-
