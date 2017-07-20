@@ -1,4 +1,0 @@
-plugins: 
-  google_apps_domain:
-    client: true
-    default: yourdomain.com
