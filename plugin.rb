@@ -19,7 +19,9 @@ module Onebox
         }
       end
 
-      matches_regexp /^(https?:)?\/\/(docs\.google\.com)\/a\/#{Regexp.quote(SiteSettings.google_apps_domain)}\/(?<endpoint>(#{supported_endpoints.join('|')}))\/d\/e\/((?<key>[\w-]*)).+$/
+      # FIXME: Support setting GApps domain
+      # matches_regexp /^(https?:)?\/\/(docs\.google\.com)\/a\/#{Regexp.quote(SiteSettings.google_apps_domain)}\/(?<endpoint>(#{supported_endpoints.join('|')}))\/d\/e\/((?<key>[\w-]*)).+$/
+      matches_regexp /^(https?:)?\/\/(docs\.google\.com)\/a\/ubiome\.com\/(?<endpoint>(#{supported_endpoints.join('|')}))\/d\/e\/((?<key>[\w-]*)).+$/
       always_https
 
       protected
