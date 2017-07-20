@@ -1,4 +1,4 @@
 plugins: 
-  gapps_docs_domain: 
+  google_apps_domain:
     client: true
     default: yourdomain.com
