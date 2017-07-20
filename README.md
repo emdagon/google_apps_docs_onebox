@@ -1,10 +1,8 @@
-# Google docs Onebox for Discourse
+# Google Apps docs Onebox for Discourse
 
-This plugin allows to embed any published document, spreadsheet, forms, and/or Presentation from Google Drive.
+This fork adds the posibility to embed private documents of your organization.
 
 ## Installation
-
-this plugin has been merged in offical [Onebox](https://github.com/discourse/onebox) gem. So no need to install this if you are using the latest version. 
 
 For standlone instalation follow these steps.
 
@@ -18,7 +16,7 @@ hooks:
         cmd:
           - mkdir -p plugins
           - git clone https://github.com/discourse/docker_manager.git
-          - git clone https://github.com/naveed-ahmad/google_docs_onebox.git
+          - git clone https://github.com/emdagon/google_docs_onebox.git
 ```
 * Rebuild the container
 
