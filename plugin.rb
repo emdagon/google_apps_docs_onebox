@@ -16,7 +16,7 @@ module Onebox
       end
 
       # matches_regexp /^(https?:)?\/\/(docs\.google\.com)\/(?<endpoint>(#{supported_endpoints.join('|')}))\/d\/((?<key>[\w-]*)).+$/
-      matches_regexp /^\[embed\-(?<endpoint>(xx|yy))\=(?<key>[\w-]*)\]$/
+      matches_regexp /^\[embed\-(?<endpoint>(#{supported_endpoints.join('|')}))\=(?<key>[\w-]*)\]$/
       
       def data
         result = { 
