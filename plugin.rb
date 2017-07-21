@@ -1,3 +1,7 @@
+# name: google_apps_docs_onebox
+# about: Google docs Onebox for embding *private* spreadsheets, forms, documents and presentations.
+# version: 0.1
+# authors: Naveed Ahmad, Emilio González
 
 Onebox = Onebox
 
