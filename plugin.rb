@@ -11,34 +11,41 @@ module Onebox
         %w(spreadsheets document forms presentation)
       end
 
-      matches_regexp /^(https?:)?\/\/(docs\.google\.com)\/a\/ubiome\.com\/(?<endpoint>(#{supported_endpoints.join('|')}))[\/a-z\/]*((?<key>[\w-]*)).+$/
+      matches_regexp /^(https?:)?\/\/(docs\.google\.com)\/(?<endpoint>(#{supported_endpoints.join('|')}))\/d\/((?<key>[\w-]*)).+$/
 
-      def to_html
+      def data
+        result = { 
+                   title: "Google #{shorttype.to_s.capitalize}",
+                   description: "This #{shorttype.to_s.chop.capitalize} is private",
+                   type: shorttype
+                 }
         if document?
-          "<iframe class='gdocs-onebox document?-onebox' src='https://docs.google.com/document/d/#{key}/pub?embedded=true' style='border: 0' width='800' height='600' frameborder='0' scrolling='yes' ></iframe>"
+          result[:link] = "https://docs.google.com/document/d/#{key}/pub?embedded=true"
         elsif spreadsheet?
-          "<iframe class='gdocs-onebox spreadsheet-onebox' src='https://docs.google.com/spreadsheet/ccc?key=#{key}&usp=sharing&rm=minimal' style='border: 0' width='800' height='600' frameborder='0' scrolling='yes' ></iframe>"
+          result[:link] = "https://docs.google.com/spreadsheet/ccc?key=#{key}&usp=sharing&rm=minimal"
         elsif presentation?
-          "<iframe class='gdocs-onebox presentation-onebox' src='https://docs.google.com/presentation/d/#{key}/embed?start=false&loop=false&delayms=3000' frameborder='0' width='960' height='749' allowfullscreen='true' mozallowfullscreen='true' webkitallowfullscreen='true'></iframe>"
+          result[:link] = "https://docs.google.com/presentation/d/#{key}/embed?start=false&loop=false&delayms=3000"
         elsif forms?
-          "<iframe class='gdocs-onebox forms-onebox' src='https://docs.google.com/forms/d/#{key}/viewform?embedded=true' width='760' height='500' frameborder='0' marginheight='0' marginwidth='0' scrolling='yes'>Loading...</iframe>"
+          result[:link] = "https://docs.google.com/forms/d/#{key}/viewform?embedded=true"
         end
+        result
       end
 
-      def spreadsheet?
-        match[:endpoint] == 'spreadsheets'
+      def self.short_types
+        @shorttypes ||= {
+          spreadsheets: :sheets,
+          document: :docs,
+          presentation: :slides,
+          forms: :forms,
+        }
+      end
+      
+      def doc_type
+        @doc_type ||= match[:endpoint].to_sym
       end
 
-      def document?
-        match[:endpoint] == 'document'
-      end
-
-      def presentation?
-        match[:endpoint] == 'presentation'
-      end
-
-      def forms?
-        match[:endpoint] == 'forms'
+      def shorttype
+        GoogleDocsOnebox.short_types[doc_type]
       end
 
       def key
