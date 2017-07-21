@@ -11,8 +11,8 @@ module Onebox
 
       include Engine
 
-      # matches_regexp /^(https?:)?\/\/(docs\.google\.com)\/(?<endpoint>(spreadsheet|document|presentation|form))\/d\/((?<key>[\w-]*)).+$/
-      matches_regexp /^\[embed\-(?<endpoint>(spreadsheet|document|presentation|form))\=(?<key>[\w-]*)\]$/
+      matches_regexp /^(https?:)?\/\/(docs\.ubiome\.com)\/(?<endpoint>(spreadsheet|document|presentation|form))\/d\/((?<key>[\w-]*)).+$/
+      # matches_regexp /^\[embed\-(?<endpoint>(spreadsheet|document|presentation|form))\=(?<key>[\w-]*)\]$/
       
       def to_html
         if document?
