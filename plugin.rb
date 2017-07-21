@@ -32,6 +32,7 @@ module Onebox
            result[:html] = "<iframe class='gdocs-onebox presentation-onebox' src='https://docs.google.com/presentation/d/#{key}/embed?start=false&loop=false&delayms=3000' frameborder='0' width='960' height='749' allowfullscreen='true' mozallowfullscreen='true' webkitallowfullscreen='true'></iframe>"
         elsif forms?
           result[:html] = "<iframe class='gdocs-onebox forms-onebox' src='https://docs.google.com/forms/d/#{key}/viewform?embedded=true' width='760' height='500' frameborder='0' marginheight='0' marginwidth='0' scrolling='yes'>Loading...</iframe>"
+        end
         result
       end
 
@@ -49,7 +50,7 @@ module Onebox
       end
 
       def shorttype
-        GoogleDocsOnebox.short_types[doc_type]
+        GoogleAppsDocsOnebox.short_types[doc_type]
       end
 
       def key
